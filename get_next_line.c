@@ -14,7 +14,12 @@
 
 void	*ft_call_struct(char *buff, int fd, struct_t fd_stack)
 {
-	while (fd != 
+	while (fd != fd_stack -> id || fd_stack -> next != NULL)
+		fd_stack = fd_stack -> next;
+	if (fd != fd_stack -> id)
+	{
+		ft_lstnew(fd, read(fd, &buff, BUFF_SIZE), 
+		
 }
 
 char	*ft_get_next_line(int fd)
