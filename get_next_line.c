@@ -12,24 +12,68 @@
 
 #include "get_next_line.h"
 
-void	*ft_call_struct(char *buff, int fd, struct_t fd_stack)
+void	*ft_content_maker(char *buff)
 {
-	while (fd != fd_stack -> id || fd_stack -> next != NULL)
-		fd_stack = fd_stack -> next;
-	if (fd != fd_stack -> id)
+	while (
+}
+
+t_list	*ft_lstnew(int id, char *content, int flag)
+{
+	t_list	*p;
+
+	if (!flag)
 	{
-		ft_lstnew(fd, read(fd, &buff, BUFF_SIZE), 
-		
+		p = (t_list *)malloc(1 * sizeof(t_list));
+		if (p != NULL && ft_content_maker(content))
+		{
+			ft_content_maker(
+			//if (!content)
+			//	p -> content = NULL;
+			//else
+			//	p -> content = content;
+			//p -> next = NULL;
+			return (p);
+		}
+	}
+	
+	return (NULL);
+}
+
+void	*ft_call_struct(char *buff, int fd, t_list *s_stack)
+{
+	t_list	*s_str;
+	t_list	*s_fd_stack;
+
+	s_fd_stack = s_stack;
+	while (fd != s_fd_stack -> id || s_fd_stack -> next != NULL)
+		s_fd_stack = s_fd_stack -> next;
+	if (s_fd_stack -> next == NULL)
+	{
+		read(fd, &buff, BUFF_SIZE);
+		s_str = ft_lstnew(fd, buff, 0);
+	}
+	else if (fd != s_fd_stack -> id)
+	{
+		if (read(fd, &buff, BUFF_SIZE))
+		{
+			s_str = ft_lstnew(fd, buff, 1);
+			if (s_str != NULL)
+				s_fd_stack -> next = s_str;
+		}
+	}
+	return (NULL);
 }
 
 char	*ft_get_next_line(int fd)
 {
-	char		*heap;
-	static struct_t	fd_stack;
+	char			*heap;
+	static struct_t	*fd_stack;
 
 	heap = (char *)malloc((BUFF_SIZE + 1) * sizeof(char));
 	if (fd >= 65536 || fd < 0 || !heap)
 		return (NULL);
-	ft_call_struct(heap, fd, fd_stack);
-	
+	if (!ft_call_struct(heap, fd, fd_stack)
+		return (NULL);
+	heap[BUFF_SIZE] = 0;
+	return (heap);
 }
