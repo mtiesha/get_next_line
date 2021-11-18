@@ -14,6 +14,13 @@
 # define GET_NEXT_LINE_H
 # include <stdlib.h>
 # include <unistd.h>
+# define BUFF_SIZE 8
+# define MAX_FD 256
 
 char	*get_next_line(int fd);
+typedef struct s_list {
+	long long		id;
+	char			*content;
+	struct s_list	*next;
+}	t_list;
 #endif
