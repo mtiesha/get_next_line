@@ -17,20 +17,19 @@ static void	*ft_content_maker(char *buff)
 	while (
 }
 
-static t_list	*ft_lstnew(int id, char *content, int flag)
+static t_list	*ft_lstnew(int fd, char *content, int flag)
 {
 	t_list	*p;
 
 	if (!flag)
 	{
 		p = (t_list *)malloc(1 * sizeof(t_list));
-		if (p != NULL && ft_content_maker(content))
+		if (p != NULL)
 		{
-			ft_content_maker(
-			//if (!content)
-			//	p -> content = NULL;
-			//else
-			//	p -> content = content;
+                        p -> id = fd;
+			
+			if (content_maker(content)
+			        p -> content = content;
 			//p -> next = NULL;
 			return (p);
 		}
@@ -58,9 +57,13 @@ static void	*ft_call_struct(char *buff, int fd, t_list *s_stack)
 	}
 	else if (s_fd_stack -> next == NULL)
 	{
-		read(fd, &buff, BUFF_SIZE);
-		s_str = ft_lstnew(fd, buff, 0);
+		if(read(fd, &buff, BUFF_SIZE))
+                {
+		        s_str = ft_lstnew(fd, buff, 0);
+                        
+                }
 	}
+        free(buff);
 	return (NULL);
 }
 
