@@ -13,14 +13,13 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 # include <stdlib.h>
+# include <limits.h>
 # include <unistd.h>
-# define BUFF_SIZE 8
-# define MAX_FD 256
 
+size_t	ft_strlen(const char *string);
+void	*ft_memcpy(void *destination, const void *src, size_t n);
+char	*ft_strdup(const char *str);
+char	*ft_substr(char const *str, unsigned int start, size_t len);
+char	*ft_strjoin(char const *str1, char const *str2);
 char	*get_next_line(int fd);
-typedef struct s_list {
-	long long		id;
-	char			*content;
-	struct s_list	*next;
-}	t_list;
 #endif

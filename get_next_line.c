@@ -12,71 +12,59 @@
 
 #include "get_next_line.h"
 
-static void	*ft_content_maker(char *buff)
+static char	*ft_n_in(char **cloud, int fd)
 {
-	while (
+	char	*temp;
+	char	*ret;
+	int		i;
+
+	i = 0;
+	while (cloud[fd][i] != '\n')
+		i++;
+	ret = ft_substr(cloud[fd], 0, i);
+	temp = ft_strdup(&(cloud[fd][i + 1]));
+	free(cloud[fd]);
+	cloud[fd] = temp;
+	return (ret);
 }
 
-static t_list	*ft_lstnew(int fd, char *content, int flag)
+static void	*ft_full_cloud(char **ret, int file, char *str)//maybe void **
 {
-	t_list	*p;
+	char	*temp;
+	int		i;
 
-	if (!flag)
-	{
-		p = (t_list *)malloc(1 * sizeof(t_list));
-		if (p != NULL)
-		{
-                        p -> id = fd;
-			
-			if (content_maker(content)
-			        p -> content = content;
-			//p -> next = NULL;
-			return (p);
-		}
-	}
-	
-	return (NULL);
-}
-
-static void	*ft_call_struct(char *buff, int fd, t_list *s_stack)
-{
-	t_list	*s_str;
-	t_list	*s_fd_stack;
-
-	s_fd_stack = s_stack;
-	while (fd != s_fd_stack -> id || s_fd_stack -> next != NULL)
-		s_fd_stack = s_fd_stack -> next;
-	if (fd != s_fd_stack -> id)
-	{
-		if (read(fd, &buff, BUFF_SIZE))
-		{
-			s_str = ft_lstnew(fd, buff, 1);
-			if (s_str != NULL)
-				s_fd_stack -> next = s_str;
-		}
-	}
-	else if (s_fd_stack -> next == NULL)
-	{
-		if(read(fd, &buff, BUFF_SIZE))
-                {
-		        s_str = ft_lstnew(fd, buff, 0);
-                        
-                }
-	}
-        free(buff);
-	return (NULL);
+	i = 0;
+	while (ret[file][i] != '\n' && ret[file][i] != '\0')
+		if (ret[file][i++] == '\n')
+			return(ft_n_in(ret, file));
+	temp = ft_strjoin(ret[file], str);
+	if (temp == NULL)
+		return (NULL);
+	free(ret[file]);
+	free (str);
+	ret[file] = temp;
+	return (ret);
 }
 
 char	*ft_get_next_line(int fd)
 {
-	char			*heap;
-	static struct_t	*s_fd;
+	char		*heap;
+	static char	*cloud[OPEN_MAX];
+	long		read_size;
 
 	heap = (char *)malloc((BUFF_SIZE + 1) * sizeof(char));
-	if (fd > OPEN_MAX || fd < 0 || !heap)// add limits.h in header
+	if (fd > OPEN_MAX || fd < 0 || !heap)
 		return (NULL);
-	heap[BUFF_SIZE] = 0;
-	if (!ft_call_struct(heap, fd, s_fd)
+	read_size = read(fd, heap, BUFF_SIZE);
+	if (read_size < 0 || (read_size == 0 && cloud[fd] == NULL))
+	{
+		free(heap);
 		return (NULL);
-	return (heap);
+	}
+	heap[read_size] = 0;
+	if (cloud[fd] == NULL)
+		cloud[fd] = ft_strdup(heap);
+	else
+		ft_full_cloud(cloud, fd, heap);
+	return (cloud[fd]);
 }
