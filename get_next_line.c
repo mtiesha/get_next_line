@@ -28,7 +28,7 @@ static char	*ft_n_in(char **cloud, int fd)
 	return (ret);
 }
 
-static void	*ft_full_cloud(char **ret, int file, char *str)//maybe void **
+static void	*ft_full_cloud(char **ret, int file, char *str)
 {
 	char	*temp;
 	int		i;
@@ -36,7 +36,7 @@ static void	*ft_full_cloud(char **ret, int file, char *str)//maybe void **
 	i = 0;
 	while (ret[file][i] != '\n' && ret[file][i] != '\0')
 		if (ret[file][i++] == '\n')
-			return(ft_n_in(ret, file));
+			return (ft_n_in(ret, file));
 	temp = ft_strjoin(ret[file], str);
 	if (temp == NULL)
 		return (NULL);
@@ -46,7 +46,7 @@ static void	*ft_full_cloud(char **ret, int file, char *str)//maybe void **
 	return (ret);
 }
 
-char	*ft_get_next_line(int fd)
+char	*get_next_line(int fd)
 {
 	char		*heap;
 	static char	*cloud[OPEN_MAX];
