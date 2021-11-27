@@ -61,8 +61,10 @@ char	*get_next_line(int fd)
 	static char	*cloud[OPEN_MAX];
 	long		read_size;
 
+	if (fd > OPEN_MAX || fd < 0)
+		return (NULL);
 	heap = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (fd > OPEN_MAX || fd < 0 || !heap)
+	if (!heap)
 		return (NULL);
 	read_size = read(fd, heap, BUFFER_SIZE);
 	if (read_size <= 0)
