@@ -12,6 +12,15 @@
 
 #include "get_next_line.h"
 
+static int	ft_is_n(const char *str)
+{
+	while (*str != '\n' && *str != 0)
+		str++;
+	if (*str == '\n')
+		return (1);
+	return (0);
+}
+
 static char	*ft_n_in(char **cloud, int fd)
 {
 	char	*temp;
@@ -40,7 +49,7 @@ static void	*ft_full_cloud(char **ret, int file, char *str)
 	temp = ft_strjoin(ret[file], str);
 	if (temp == NULL)
 		return (NULL);
-	free(ret[file]);
+	free(&ret[file]);
 	free (str);
 	ret[file] = temp;
 	return (ret);
@@ -56,14 +65,18 @@ char	*get_next_line(int fd)
 	if (fd > OPEN_MAX || fd < 0 || !heap)
 		return (NULL);
 	read_size = read(fd, heap, BUFFER_SIZE);
-	if (read_size < 0 || (read_size == 0 && cloud[fd] == NULL))
+	if (read_size <= 0)
 	{
 		free(heap);
 		return (NULL);
 	}
 	heap[read_size] = 0;
 	if (cloud[fd] == NULL)
+	{
 		cloud[fd] = ft_strdup(heap);
+		if (!ft_is_n(cloud[fd]))
+			cloud[fd] = get_next_line(fd);
+	}
 	else
 		ft_full_cloud(cloud, fd, heap);
 	return (cloud[fd]);
