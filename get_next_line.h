@@ -19,11 +19,15 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 0
 # endif
+# if BUFFER_SIZE < 0
+# undef BUFFER_SIZE
+# define BUFFER_SIZE 0
+# endif
 
 size_t	ft_strlen(const char *string);
+char	*ft_strchr(const char *s, int c);
 void	*ft_memcpy(void *destination, const void *src, size_t n);
 char	*ft_strdup(const char *str);
-char	*ft_substr(char const *str, unsigned int start, size_t len);
 char	*ft_strjoin(char const *str1, char const *str2);
 char	*get_next_line(int fd);
 #endif
