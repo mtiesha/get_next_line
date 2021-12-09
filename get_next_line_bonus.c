@@ -12,59 +12,87 @@
 
 #include "get_next_line.h"
 
-static char	*ft_n_in(char **cloud, int fd)
+static int	ft_reader(int fd, char **buf, long *read_size)
 {
-	char	*temp;
-	char	*ret;
-	int		i;
+	*read_size = read(fd, *buf, BUFFER_SIZE);
+	return (*read_size);
+}
 
-	i = 0;
-	while (cloud[fd][i] != '\n')
-		i++;
-	ret = ft_substr(cloud[fd], 0, i);
-	temp = ft_strdup(&(cloud[fd][i + 1]));
-	free(cloud[fd]);
-	cloud[fd] = temp;
+static char	*ft_join(char **str1, char *str2, int slide)
+{
+	char	*ret;
+
+	if (!*str1 || slide)
+		ret = ft_strdup(str2);
+	else
+	{
+		ret = ft_strjoin(&*str1, &str2, ft_strlen(*str1), ft_strlen(str2));
+		free(*str1);
+	}
+	if (slide)
+		free(*str1);
 	return (ret);
 }
 
-static void	*ft_full_cloud(char **ret, int file, char *str)
+static int	ft_full_cloud(char **ret_str, char **cloud)
 {
-	char	*temp;
-	int		i;
+	char	*ptr;
 
-	i = 0;
-	while (ret[file][i] != '\n' && ret[file][i] != '\0')
-		if (ret[file][i++] == '\n')
-			return (ft_n_in(ret, file));
-	temp = ft_strjoin(ret[file], str);
-	if (temp == NULL)
+	ptr = ft_strchr(*cloud, '\n');
+	if (ptr)
+	{
+		*ptr = 0;
+		*ret_str = ft_join(&*ret_str, *cloud, 0);
+		*ret_str = ft_join(&*ret_str, "\n", 0);
+		*cloud = ft_join(&*cloud, ++ptr, 1);
+		return (1);
+	}
+	else
+	{
+		if (ft_strlen(*cloud))
+			*ret_str = ft_join(&*ret_str, *cloud, 0);
+		free(*cloud);
+		*cloud = NULL;
+		return (0);
+	}
+}
+
+static char	*ft_loop_read(char **cloud, int fd, char *buf, int *n_in_cloud)
+{
+	long		read_size;
+	char		*ret_str;
+	char		*ptr;
+
+	ret_str = NULL;
+	read_size = 1;
+	if (*cloud)
+		*n_in_cloud = ft_full_cloud(&ret_str, &*cloud);
+	while (!*n_in_cloud && ft_reader(fd, &buf, &read_size) > 0)
+	{
+		buf[read_size] = 0;
+		if (ft_strchr(buf, '\n'))
+		{
+			ptr = ft_strchr(buf, '\n');
+			*ptr = 0;
+			*cloud = ft_join(&*cloud, ++ptr, 0);
+			ret_str = ft_join(&ret_str, buf, 0);
+			return ((ret_str = ft_join(&ret_str, "\n", 0)));
+		}
+		ret_str = ft_join(&ret_str, buf, 0);
+	}
+	if (!read_size && !ret_str)
 		return (NULL);
-	free(ret[file]);
-	free (str);
-	ret[file] = temp;
-	return (ret);
+	return (ret_str);
 }
 
 char	*get_next_line(int fd)
 {
-	char		*heap;
-	static char	*cloud[OPEN_MAX];
-	long		read_size;
+	static char	*array_fd[OPEN_MAX];
+	char		buff[BUFFER_SIZE + 1];
+	int			n_in_cloud;
 
-	heap = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (fd > OPEN_MAX || fd < 0 || !heap)
+	if (fd > OPEN_MAX || fd < 0)
 		return (NULL);
-	read_size = read(fd, heap, BUFFER_SIZE);
-	if (read_size < 0 || (read_size == 0 && cloud[fd] == NULL))
-	{
-		free(heap);
-		return (NULL);
-	}
-	heap[read_size] = 0;
-	if (cloud[fd] == NULL)
-		cloud[fd] = ft_strdup(heap);
-	else
-		ft_full_cloud(cloud, fd, heap);
-	return (cloud[fd]);
+	n_in_cloud = 0;
+	return (ft_loop_read(&*(array_fd + fd), fd, buff, &n_in_cloud));
 }
