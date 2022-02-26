@@ -26,10 +26,10 @@
 #  define BUFFER_SIZE 0
 # endif
 
-size_t	ft_strlen(const char *string);
-char	*ft_strchr(const char *s, int c);
-void	*ft_memcpy(void *destination, const void *src, size_t n);
-char	*ft_strdup(const char *str);
-char	*ft_strjoin(char **str1, char **str2, size_t str1_len, size_t str2_len);
+size_t	ft_strlen_gnl(const char *string);
+char	*ft_strchr_gnl(const char *s, int c);
+void	*ft_memcpy_gnl(void *destination, const void *src, size_t n);
+char	*ft_strdup_gnl(const char *str);
+char	*ft_strjoin_gnl(char **str1, char **str2, size_t str1_len, size_t str2_len);
 char	*get_next_line(int fd);
 #endif
