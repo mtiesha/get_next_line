@@ -12,7 +12,7 @@
 
 #include "get_next_line_bonus.h"
 
-size_t	ft_strlen(const char *string)
+size_t	ft_strlen_gnl(const char *string)
 {
 	int	i;
 
@@ -22,7 +22,7 @@ size_t	ft_strlen(const char *string)
 	return (i);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr_gnl(const char *s, int c)
 {
 	while (*s)
 	{
@@ -33,7 +33,7 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
-void	*ft_memcpy(void *destination, const void *src, size_t n)
+void	*ft_memcpy_gnl(void *destination, const void *src, size_t n)
 {
 	unsigned char		*d;
 	const unsigned char	*s;
@@ -47,7 +47,7 @@ void	*ft_memcpy(void *destination, const void *src, size_t n)
 	return (destination);
 }
 
-char	*ft_strdup(const char *str)
+char	*ft_strdup_gnl(const char *str)
 {
 	unsigned char	*s;
 	int				str_len;
@@ -62,7 +62,7 @@ char	*ft_strdup(const char *str)
 	return (NULL);
 }
 
-char	*ft_strjoin(char **str1, char **str2, size_t str1_len, size_t str2_len)
+char	*ft_strjoin_gnl(char **str1, char **str2, size_t str1_len, size_t str2_len)
 {
 	size_t			str1str2_len;
 	unsigned char	*ret;
