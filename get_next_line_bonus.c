@@ -23,10 +23,10 @@ static char	*ft_join(char **str1, char *str2, int slide)
 	char	*ret;
 
 	if (!*str1 || slide)
-		ret = ft_strdup(str2);
+		ret = ft_strdup_gnl(str2);
 	else
 	{
-		ret = ft_strjoin(&*str1, &str2, ft_strlen(*str1), ft_strlen(str2));
+		ret = ft_strjoin_gnl(&*str1, &str2, ft_strlen_gnl(*str1), ft_strlen_gnl(str2));
 		free(*str1);
 	}
 	if (slide)
@@ -38,7 +38,7 @@ static int	ft_full_cloud(char **ret_str, char **cloud)
 {
 	char	*ptr;
 
-	ptr = ft_strchr(*cloud, '\n');
+	ptr = ft_strchr_gnl(*cloud, '\n');
 	if (ptr)
 	{
 		*ptr = 0;
@@ -49,7 +49,7 @@ static int	ft_full_cloud(char **ret_str, char **cloud)
 	}
 	else
 	{
-		if (ft_strlen(*cloud))
+		if (ft_strlen_gnl(*cloud))
 			*ret_str = ft_join(&*ret_str, *cloud, 0);
 		free(*cloud);
 		*cloud = NULL;
@@ -70,9 +70,9 @@ static char	*ft_loop_read(char **cloud, int fd, char *buf, int *n_in_cloud)
 	while (!*n_in_cloud && ft_reader(fd, &buf, &read_size) > 0)
 	{
 		buf[read_size] = 0;
-		if (ft_strchr(buf, '\n'))
+		if (ft_strchr_gnl(buf, '\n'))
 		{
-			ptr = ft_strchr(buf, '\n');
+			ptr = ft_strchr_gnl(buf, '\n');
 			*ptr = 0;
 			*cloud = ft_join(&*cloud, ++ptr, 0);
 			ret_str = ft_join(&ret_str, buf, 0);
